@@ -5,6 +5,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
+#include <vector>
+#include "Shape.h"
 
 
 int main() 
@@ -21,6 +23,21 @@ int main()
     int fontR;
     int fontG;
     int fontB;
+    // Shapes variables
+    std::string shapeName;
+    float shapeX;
+    float shapeY;
+    float shapeXSpeed;
+    float shapeYSpeed;
+    int shapeR;
+    int shapeG;
+    int shapeB;
+    float shapeWidth;
+    float shapeHeight;
+    float shapeRadius;
+
+    // Shapes vector
+    std::vector<Shape> shapes;
 
     // If the file doesn't open we tell the user and exit out
     if (!myFileStream)
@@ -29,21 +46,38 @@ int main()
         return -1;
     }
 
+    // Read every word of every line
     while (myFileStream >> temp)
     {
+        // If word equals Window next to words are width and height
         if (temp == "Window")
         {
             myFileStream >> wWidth >> wHeight;
         }
 
+        // If word equals Font next lines are for font variables
         if (temp == "Font")
         {
             myFileStream >> fontFilename >> fontSize >> fontR >> fontG >> fontB;
         }
+
+        // Shapes create a custom shape class to be stored in shapes vector
+        if (temp == "Circle")
+        {
+            myFileStream >> shapeName >> shapeX >> shapeY >> shapeXSpeed >> shapeYSpeed >> shapeR >> shapeG >> shapeB >> shapeRadius;
+            Shape shape(shapeName, shapeX, shapeY, shapeXSpeed, shapeYSpeed, shapeR, shapeG, shapeB, shapeRadius);
+            shapes.push_back(shape);
+        }
+
+        if (temp == "Rectangle")
+        {
+            myFileStream >> shapeName >> shapeX >> shapeY >> shapeXSpeed >> shapeYSpeed >> shapeR >> shapeG >> shapeB >> shapeWidth >> shapeHeight;
+            Shape shape(shapeName, shapeX, shapeY, shapeXSpeed, shapeYSpeed, shapeR, shapeG, shapeB, shapeWidth, shapeHeight);
+            shapes.push_back(shape);
+        }
     }
 
     // Create a window with the given width and height
-
     sf::RenderWindow window(sf::VideoMode({ wWidth, wHeight }), "Shapes");
 
     // Cap Frame Rate 
@@ -108,6 +142,15 @@ int main()
         // Update ImGui for this frame with the time that the last frame took
         ImGui::SFML::Update(window, deltaClock.restart());
 
+        // clear window every frame to get rid of drawn shapes
+        window.clear();
+
+        for (Shape& shape : shapes)
+        {
+            shape.update();
+            shape.draw(window);
+        }
+
         // ImGui Ui
         ImGui::Begin("Window Title");
         ImGui::Text("Window Text!");
@@ -141,20 +184,6 @@ int main()
 
         // Move circle based on circleSpeedX and Y
         shape.move({ circleSpeedX, circleSpeedY });
-
-        // clear window every frame to get rid of drawn shapes
-        window.clear();
-
-        // if drawCircle or drawText are checked you can see the shape or text
-        if (drawCircle)
-        {
-            window.draw(shape);
-        }
-        
-        if (drawText)
-        {
-            window.draw(text);
-        }
 
         // Draw ui last so it's on top
         ImGui::SFML::Render(window);
