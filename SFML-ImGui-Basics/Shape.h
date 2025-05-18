@@ -12,6 +12,8 @@ class Shape
     bool mIsCircle = false;
     sf::CircleShape mCircle;
     sf::RectangleShape mRectangle;
+    bool mCanDraw = true;
+    float mScale = 1.0f;
 
 public:
     Shape(std::string name, float x, float y, float xSpeed, float ySpeed, int r, int g, int b, float width, float height) :
@@ -36,6 +38,11 @@ public:
     std::string shapeName() 
     {
         return mShapeName;
+    }
+
+    float scale() const
+    {
+        return mScale;
     }
 
     float shapeX() const
@@ -78,6 +85,11 @@ public:
         return mIsCircle;
     }
 
+    bool canDraw()
+    {
+        return mCanDraw;
+    }
+
     void shapeX(float newX)
     {
         mShapeX = newX;
@@ -113,12 +125,36 @@ public:
         mShapeRadius = newShapeRadius;
     }
 
+    void setCanDraw(bool draw)
+    {
+        mCanDraw = draw;
+    }
+
+    void setScale(float scale)
+    {
+        mScale = scale;
+
+        if (mIsCircle)
+        {
+            mCircle.setScale({ scale, scale });
+        }
+        else
+        {
+            mRectangle.setScale({ scale, scale });
+        }
+    }
+
+
     void draw(sf::RenderWindow& window)
     {
         if (mIsCircle)
+        {
             window.draw(mCircle);
+        }
         else
+        {
             window.draw(mRectangle);
+        }
     }
 
     void update()
@@ -127,8 +163,12 @@ public:
         mShapeY += mShapeYSpeed;
 
         if (mIsCircle)
+        {
             mCircle.setPosition({ mShapeX, mShapeY });
+        }   
         else
+        {
             mRectangle.setPosition({ mShapeX, mShapeY });
+        }
     }
 };

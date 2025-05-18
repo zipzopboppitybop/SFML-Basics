@@ -139,8 +139,12 @@ int main()
         for (Shape& shape : shapes)
         {
             shape.update();
-            shape.draw(window);
 
+            if (shape.canDraw())
+            {
+                shape.draw(window);
+            }
+            
             float winW = window.getSize().x;
             float winH = window.getSize().y;
             float r = shape.shapeRadius();
@@ -150,18 +154,19 @@ int main()
             float h = shape.shapeHeight();
             float xSpeed = shape.shapeXSpeed();
             float ySpeed = shape.shapeYSpeed();
+            float scale = shape.scale();
 
             if (shape.isCircle())
             {
                 // Bounce on X axis
-                if (x - r < 0 || x + 2*r > winW)
+                if (x < 0 || x  + 2*r * scale > winW)
                 {
                     float newXSpeed = xSpeed * -1;
                     shape.shapeXSpeed(newXSpeed);
                 }
 
                 // Bounce on Y axis
-                if (y < 0 || y + 2*r> winH)
+                if (y < 0 || y + 2*r * scale> winH)
                 {
                     float newYSpeed = ySpeed * -1;
                     shape.shapeYSpeed(newYSpeed);
@@ -187,14 +192,23 @@ int main()
 
         // ImGui Ui
         ImGui::Begin("Shape Properties");
-
-
-
         ImGui::Combo("Shape", &item_current, shapeNames.data(), shapeNames.size());
-        //ImGui::Checkbox("Draw Circle", &drawCircle);
-        ImGui::SameLine();
+
+        bool draw = shapes[item_current].canDraw();
+        if (ImGui::Checkbox("Draw Shape", &draw)) 
+        {
+            shapes[item_current].setCanDraw(draw);
+        }
+
+        float scale = shapes[item_current].scale();
+        if (ImGui::SliderFloat("Scale", &scale, 0.0f, 5.0f))
+        {
+            shapes[item_current].setScale(scale);
+        }
+
+        //ImGui::SameLine();
        // ImGui::Checkbox("Draw Text", &drawText);
-        //ImGui::SliderFloat("Radius", &circleRadius, 0.0f, 300.0f);
+
        // ImGui::SliderInt("Sides", &circleSegments, 3, 64);
         //ImGui::ColorEdit3("Circle Color", c);
 
