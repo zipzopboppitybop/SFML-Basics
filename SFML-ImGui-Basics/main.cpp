@@ -138,6 +138,7 @@ int main()
 
         for (Shape& shape : shapes)
         {
+
             shape.update();
 
             if (shape.canDraw())
@@ -162,54 +163,79 @@ int main()
                 if (x < 0 || x  + 2*r * scale > winW)
                 {
                     float newXSpeed = xSpeed * -1;
-                    shape.shapeXSpeed(newXSpeed);
+                    shape.setShapeXSpeed(newXSpeed);
                 }
 
                 // Bounce on Y axis
                 if (y < 0 || y + 2*r * scale> winH)
                 {
                     float newYSpeed = ySpeed * -1;
-                    shape.shapeYSpeed(newYSpeed);
+                    shape.setShapeYSpeed(newYSpeed);
                 }
             }
             else
             {
                 // Bounce on X axis
-                if (x < 0 || x + w  > winW)
+                if (x < 0 || x + w * scale > winW)
                 {
                     float newXSpeed = xSpeed * -1;
-                    shape.shapeXSpeed(newXSpeed);
+                    shape.setShapeXSpeed(newXSpeed);
                 }
 
                 // Bounce on Y axis
-                if (y < 0 || y + h  > winH)
+                if (y < 0 || y + h * scale  > winH)
                 {
                     float newYSpeed = ySpeed * -1;
-                    shape.shapeYSpeed(newYSpeed);
+                    shape.setShapeYSpeed(newYSpeed);
                 }
             }
         }
 
         // ImGui Ui
         ImGui::Begin("Shape Properties");
+
+        Shape& currentShape = shapes[item_current];
         ImGui::Combo("Shape", &item_current, shapeNames.data(), shapeNames.size());
 
-        bool draw = shapes[item_current].canDraw();
+        bool draw = currentShape.canDraw();
         if (ImGui::Checkbox("Draw Shape", &draw)) 
         {
-            shapes[item_current].setCanDraw(draw);
+            currentShape.setCanDraw(draw);
         }
 
-        float scale = shapes[item_current].scale();
+        float scale = currentShape.scale();
         if (ImGui::SliderFloat("Scale", &scale, 0.0f, 5.0f))
         {
-            shapes[item_current].setScale(scale);
+            currentShape.setScale(scale);
         }
 
-        //ImGui::SameLine();
-       // ImGui::Checkbox("Draw Text", &drawText);
+        // Manually set slider width to keep velocity boxes inside window
+        float sliderWidth = 200.0f; 
+        // Force width on imgui widget
+        ImGui::PushItemWidth(sliderWidth);
+        // get shape xspeed
+        float xSpeed = currentShape.shapeXSpeed();
+        // Create the slider that controls x speed
+        if (ImGui::SliderFloat("##VelocityX", &xSpeed, -10.0f, 10.0f))
+        {
+            currentShape.setShapeXSpeed(xSpeed);
+        }
 
-       // ImGui::SliderInt("Sides", &circleSegments, 3, 64);
+        // keep everything on the same line
+        ImGui::SameLine();
+
+        float ySpeed = currentShape.shapeYSpeed();
+        if (ImGui::SliderFloat("##VelocityY", &ySpeed, -10.0f, 10.0f))
+        {
+            currentShape.setShapeYSpeed(ySpeed);
+        }
+
+        // Stop setting width
+        ImGui::PopItemWidth();
+        ImGui::SameLine();
+        // Make label for both velocity boxes
+        ImGui::Text("Velocity");
+
         //ImGui::ColorEdit3("Circle Color", c);
 
         // Press button to set text string

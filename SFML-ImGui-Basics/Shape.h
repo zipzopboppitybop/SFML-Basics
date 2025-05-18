@@ -100,12 +100,12 @@ public:
         mShapeY = newY;
     }
 
-    void shapeXSpeed(float newXSpeed)
+    void setShapeXSpeed(float newXSpeed)
     {
         mShapeXSpeed = newXSpeed;
     }
 
-    void shapeYSpeed(float newYSpeed)
+    void setShapeYSpeed(float newYSpeed)
     {
         mShapeYSpeed = newYSpeed;
     }
