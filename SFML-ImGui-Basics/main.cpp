@@ -266,20 +266,21 @@ int main()
             currentShape.setShapeColor();
         }
 
-        // Press button to set text string
-        //if (ImGui::Button("Set Text"))
-        //{
-        //    text.setString(displayString);
-        //}
-        //ImGui::SameLine();
-        //if (ImGui::Button("Reset Circle"))
-        //{
-        //    shape.setPosition({ 0.0f, 0.0f });
-        //}
+
+        std::string name = currentShape.shapeName();
+        size_t bufferSize = 255;
+        char* shapeName = new char[bufferSize];
+        strcpy_s(shapeName, bufferSize, name.c_str());
+
+        if (ImGui::InputText("Name", shapeName, bufferSize))
+        {
+            currentShape.setShapeName(shapeName);
+        }
+
+        delete[] shapeName;
+
         // End of Ui box
         ImGui::End();
-
-        //ImGui::ShowDemoWindow();
 
         // Draw ui last so it's on top
         ImGui::SFML::Render(window);

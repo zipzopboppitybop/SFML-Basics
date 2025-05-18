@@ -162,6 +162,11 @@ public:
         mShapeB = newB;
     }
 
+    void setShapeName(char* newName)
+    {
+        mShapeName = newName;
+    }
+
     void setScale(float scale)
     {
         mScale = scale;
