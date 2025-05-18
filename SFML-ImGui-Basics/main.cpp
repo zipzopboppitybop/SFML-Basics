@@ -138,14 +138,6 @@ int main()
 
         for (Shape& shape : shapes)
         {
-
-            shape.update();
-
-            if (shape.canDraw())
-            {
-                shape.draw(window);
-            }
-            
             float winW = window.getSize().x;
             float winH = window.getSize().y;
             float r = shape.shapeRadius();
@@ -157,6 +149,24 @@ int main()
             float ySpeed = shape.shapeYSpeed();
             float scale = shape.scale();
 
+            sf::Text text(font);
+            text.setString(shape.shapeName());
+            text.setCharacterSize(fontSize);
+            text.setFillColor(sf::Color(fontR, fontG, fontB));
+
+            sf::FloatRect textBounds = text.getLocalBounds();
+
+            text.setOrigin({ textBounds.size.x / 2.f, textBounds.size.y / 2.f });
+
+            if (shape.isCircle())
+            {
+                text.setPosition({ x + r * scale, y + r * scale });
+            }
+            else
+            {
+                text.setPosition({ x + (w / 2.f) * scale, y + (h / 2.f) * scale });
+            }
+            // Circle collisions
             if (shape.isCircle())
             {
                 // Bounce on X axis
@@ -173,6 +183,7 @@ int main()
                     shape.setShapeYSpeed(newYSpeed);
                 }
             }
+            // Rectangle collisions
             else
             {
                 // Bounce on X axis
@@ -189,6 +200,15 @@ int main()
                     shape.setShapeYSpeed(newYSpeed);
                 }
             }
+
+            shape.update();
+
+            if (shape.canDraw())
+            {
+                shape.draw(window);
+                window.draw(text);
+            }
+
         }
 
         // ImGui Ui
