@@ -19,10 +19,10 @@ int main()
     unsigned int wHeight = 0;
     // Font variables
     std::string fontFilename;
-    int fontSize;
-    int fontR;
-    int fontG;
-    int fontB;
+    int fontSize = 0;
+    int fontR = 0;
+    int fontG = 0;
+    int fontB = 0;
     // Shapes variables
     std::string shapeName;
     float shapeX;
@@ -90,21 +90,6 @@ int main()
     ImGui::GetStyle().ScaleAllSizes(2.0f);
     ImGui::GetIO().FontGlobalScale = 2.0f;
 
-    // Circle rgb values
-    float c[3] = { 0.0f, 1.0f, 1.0f };
-
-    // Shape properties based on the config.txt
-    float circleRadius = 50;
-    int circleSegments = 32;
-    float circleSpeedX = 1.0f;
-    float circleSpeedY = 0.5f;
-    bool drawCircle = true;
-    bool drawText = true;
-
-    // Create a circle with the given properties
-    sf::CircleShape shape(circleRadius, circleSegments);
-    shape.setFillColor(sf::Color::Green);
-
     // Load font from fonts folder
     // If it doesn't load send an error message
     sf::Font font;
@@ -149,41 +134,74 @@ int main()
         {
             shape.update();
             shape.draw(window);
+
+            float winW = window.getSize().x;
+            float winH = window.getSize().y;
+            float r = shape.shapeRadius();
+            float x = shape.shapeX();
+            float y = shape.shapeY();
+            float w = shape.shapeWidth();
+            float h = shape.shapeHeight();
+            float xSpeed = shape.shapeXSpeed();
+            float ySpeed = shape.shapeYSpeed();
+
+            if (shape.isCircle())
+            {
+                // Bounce on X axis
+                if (x - r < 0 || x + 2*r > winW)
+                {
+                    float newXSpeed = xSpeed * -1;
+                    shape.shapeXSpeed(newXSpeed);
+                }
+
+                // Bounce on Y axis
+                if (y < 0 || y + 2*r> winH)
+                {
+                    float newYSpeed = ySpeed * -1;
+                    shape.shapeYSpeed(newYSpeed);
+                }
+            }
+            else
+            {
+                // Bounce on X axis
+                if (x < 0 || x + w  > winW)
+                {
+                    float newXSpeed = xSpeed * -1;
+                    shape.shapeXSpeed(newXSpeed);
+                }
+
+                // Bounce on Y axis
+                if (y < 0 || y + h  > winH)
+                {
+                    float newYSpeed = ySpeed * -1;
+                    shape.shapeYSpeed(newYSpeed);
+                }
+            }
         }
 
         // ImGui Ui
         ImGui::Begin("Window Title");
         ImGui::Text("Window Text!");
-        ImGui::Checkbox("Draw Circle", &drawCircle);
+        //ImGui::Checkbox("Draw Circle", &drawCircle);
         ImGui::SameLine();
-        ImGui::Checkbox("Draw Text", &drawText);
-        ImGui::SliderFloat("Radius", &circleRadius, 0.0f, 300.0f);
-        ImGui::SliderInt("Sides", &circleSegments, 3, 64);
-        ImGui::ColorEdit3("Circle Color", c);
+       // ImGui::Checkbox("Draw Text", &drawText);
+        //ImGui::SliderFloat("Radius", &circleRadius, 0.0f, 300.0f);
+       // ImGui::SliderInt("Sides", &circleSegments, 3, 64);
+        //ImGui::ColorEdit3("Circle Color", c);
         ImGui::InputText("Text", displayString, 255);
 
         // Press button to set text string
-        if (ImGui::Button("Set Text"))
-        {
-            text.setString(displayString);
-        }
-        ImGui::SameLine();
-        if (ImGui::Button("Reset Circle"))
-        {
-            shape.setPosition({ 0.0f, 0.0f });
-        }
+        //if (ImGui::Button("Set Text"))
+        //{
+        //    text.setString(displayString);
+        //}
+        //ImGui::SameLine();
+        //if (ImGui::Button("Reset Circle"))
+        //{
+        //    shape.setPosition({ 0.0f, 0.0f });
+        //}
         // End of Ui box
         ImGui::End();
-
-        // set circle properties again in case ui changed them
-        shape.setPointCount(circleSegments);
-        shape.setRadius(circleRadius);
-
-        // Imgui uses 0-1 for colors but sfml uses 0-255 so we have to conver
-        shape.setFillColor(sf::Color(c[0] * 255, c[1] * 255, c[2] * 255));
-
-        // Move circle based on circleSpeedX and Y
-        shape.move({ circleSpeedX, circleSpeedY });
 
         // Draw ui last so it's on top
         ImGui::SFML::Render(window);
