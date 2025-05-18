@@ -99,18 +99,24 @@ int main()
         return -1;
     }
 
-    // Create text object with the font
-    // Set its size, color, and position on the screen
-    sf::Text text(font);  
-    text.setCharacterSize(fontSize);
-    text.setFillColor(sf::Color(fontR, fontG, fontB));
-    text.setPosition({100.f, 100.f});
-
-    // Make display string to set text
-    char displayString[255] = "Sample Text";
-
     // Clock for internal timing
     sf::Clock deltaClock;
+
+    // Shape names for imgui combo list
+    // I have to convert the strings to c style string to use them for combo box
+    // I also need to have them stored here so they do not disappear
+    std::vector<std::string> shapesNamesStrings;
+    std::vector<const char*> shapeNames;
+    static int item_current = 0;
+    for (int i = 0; i < shapes.size(); i++)
+    {
+        shapesNamesStrings.push_back(shapes[i].shapeName());
+    }
+
+    for (int i = 0; i < shapes.size(); i++)
+    {
+        shapeNames.push_back(shapesNamesStrings[i].c_str());
+    }
 
     // While window is active
     while (window.isOpen()) {
@@ -180,15 +186,17 @@ int main()
         }
 
         // ImGui Ui
-        ImGui::Begin("Window Title");
-        ImGui::Text("Window Text!");
+        ImGui::Begin("Shape Properties");
+
+
+
+        ImGui::Combo("Shape", &item_current, shapeNames.data(), shapeNames.size());
         //ImGui::Checkbox("Draw Circle", &drawCircle);
         ImGui::SameLine();
        // ImGui::Checkbox("Draw Text", &drawText);
         //ImGui::SliderFloat("Radius", &circleRadius, 0.0f, 300.0f);
        // ImGui::SliderInt("Sides", &circleSegments, 3, 64);
         //ImGui::ColorEdit3("Circle Color", c);
-        ImGui::InputText("Text", displayString, 255);
 
         // Press button to set text string
         //if (ImGui::Button("Set Text"))
@@ -202,6 +210,8 @@ int main()
         //}
         // End of Ui box
         ImGui::End();
+
+        //ImGui::ShowDemoWindow();
 
         // Draw ui last so it's on top
         ImGui::SFML::Render(window);

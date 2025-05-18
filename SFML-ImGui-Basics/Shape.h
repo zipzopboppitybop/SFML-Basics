@@ -4,11 +4,11 @@
 
 class Shape
 {
-    std::string mShapeName;
-    float mShapeX, mShapeY;
-    float mShapeXSpeed, mShapeYSpeed;
-    int mShapeR, mShapeG, mShapeB;
-    float mShapeWidth, mShapeHeight, mShapeRadius;
+    std::string mShapeName = "";
+    float mShapeX, mShapeY = 0.0f;
+    float mShapeXSpeed, mShapeYSpeed = 0.0f;
+    int mShapeR, mShapeG, mShapeB = 0;
+    float mShapeWidth, mShapeHeight, mShapeRadius = 0.0f;
     bool mIsCircle = false;
     sf::CircleShape mCircle;
     sf::RectangleShape mRectangle;
@@ -20,6 +20,7 @@ public:
         mRectangle.setSize({ mShapeWidth, mShapeHeight });
         mRectangle.setFillColor(sf::Color(mShapeR, mShapeG, mShapeB));
         mRectangle.setPosition({ mShapeX, mShapeY });
+        mShapeRadius = 0.0f;
     }
 
     Shape(std::string name, float x, float y, float xSpeed, float ySpeed, int r, int g, int b, float radius) :
@@ -29,6 +30,12 @@ public:
         mCircle.setFillColor(sf::Color(mShapeR, mShapeG, mShapeB));
         mCircle.setPosition({ mShapeX, mShapeY });
         mIsCircle = true;
+        mShapeWidth, mShapeHeight = 0;
+    }
+
+    std::string shapeName() 
+    {
+        return mShapeName;
     }
 
     float shapeX() const
