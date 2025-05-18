@@ -9,9 +9,29 @@
 
 int main() 
 {
+    // Read config file
+    std::ifstream myFileStream("config.txt");
+    std::string temp;
+    unsigned int wWidth = 0;
+    unsigned int wHeight = 0;
+
+    // If the file doesn't open we tell the user and exit out
+    if (!myFileStream)
+    {
+        std::cout << "Error: Unable to open file for reading.\n";
+        return -1;
+    }
+
+    while (myFileStream >> temp)
+    {
+        if (temp == "Window")
+        {
+            myFileStream >> wWidth >> wHeight;
+        }
+    }
+
     // Create a window with the given width and height
-    const int wWidth = 1280;
-    const int wHeight = 720;
+
     sf::RenderWindow window(sf::VideoMode({ wWidth, wHeight }), "Shapes");
 
     // Cap Frame Rate 
