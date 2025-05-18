@@ -12,8 +12,15 @@ int main()
     // Read config file
     std::ifstream myFileStream("config.txt");
     std::string temp;
+    // Window variables
     unsigned int wWidth = 0;
     unsigned int wHeight = 0;
+    // Font variables
+    std::string fontFilename;
+    int fontSize;
+    int fontR;
+    int fontG;
+    int fontB;
 
     // If the file doesn't open we tell the user and exit out
     if (!myFileStream)
@@ -27,6 +34,11 @@ int main()
         if (temp == "Window")
         {
             myFileStream >> wWidth >> wHeight;
+        }
+
+        if (temp == "Font")
+        {
+            myFileStream >> fontFilename >> fontSize >> fontR >> fontG >> fontB;
         }
     }
 
@@ -62,7 +74,7 @@ int main()
     // Load font from fonts folder
     // If it doesn't load send an error message
     sf::Font font;
-    if (!font.openFromFile("fonts/Roboto-Regular.ttf"))
+    if (!font.openFromFile(fontFilename))
     {
         std::cerr << "Failed to load font!\n";
         return -1;
@@ -71,8 +83,8 @@ int main()
     // Create text object with the font
     // Set its size, color, and position on the screen
     sf::Text text(font);  
-    text.setCharacterSize(30);
-    text.setFillColor(sf::Color::White);
+    text.setCharacterSize(fontSize);
+    text.setFillColor(sf::Color(fontR, fontG, fontB));
     text.setPosition({100.f, 100.f});
 
     // Make display string to set text
