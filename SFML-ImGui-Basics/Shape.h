@@ -14,6 +14,7 @@ class Shape
     sf::RectangleShape mRectangle;
     bool mCanDraw = true;
     float mScale = 1.0f;
+    
 
 public:
     Shape(std::string name, float x, float y, float xSpeed, float ySpeed, int r, int g, int b, float width, float height) :
@@ -32,7 +33,8 @@ public:
         mCircle.setFillColor(sf::Color(mShapeR, mShapeG, mShapeB));
         mCircle.setPosition({ mShapeX, mShapeY });
         mIsCircle = true;
-        mShapeWidth, mShapeHeight = 0;
+        mShapeWidth = 0;
+        mShapeHeight = 0;
     }
 
     std::string shapeName() 
@@ -90,6 +92,21 @@ public:
         return mCanDraw;
     }
 
+    int shapeR() const
+    {
+        return mShapeR;
+    }
+
+    int shapeG() const
+    {
+        return mShapeG;
+    }
+
+    int shapeB() const
+    {
+        return mShapeB;
+    }
+
     void shapeX(float newX)
     {
         mShapeX = newX;
@@ -128,6 +145,21 @@ public:
     void setCanDraw(bool draw)
     {
         mCanDraw = draw;
+    }
+
+    void setShapeR(int newR)
+    {
+        mShapeR = newR;
+    }
+
+    void setShapeG(int newG)
+    {
+        mShapeG = newG;
+    }
+
+    void setShapeB(int newB)
+    {
+        mShapeB = newB;
     }
 
     void setScale(float scale)
@@ -169,6 +201,18 @@ public:
         else
         {
             mRectangle.setPosition({ mShapeX, mShapeY });
+        }
+    }
+
+    void setShapeColor()
+    {
+        if (mIsCircle)
+        {
+            mCircle.setFillColor(sf::Color(mShapeR, mShapeG, mShapeB));
+        }
+        else
+        {
+            mRectangle.setFillColor(sf::Color(mShapeR, mShapeG, mShapeB));
         }
     }
 };

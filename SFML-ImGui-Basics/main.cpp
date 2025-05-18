@@ -236,7 +236,15 @@ int main()
         // Make label for both velocity boxes
         ImGui::Text("Velocity");
 
-        //ImGui::ColorEdit3("Circle Color", c);
+        // Casting the integers and floats because it makes the numbers more precise
+        float imguiColor[3] = { static_cast<float>(currentShape.shapeR()) / 255,static_cast<float>(currentShape.shapeG()) / 255, static_cast<float>(currentShape.shapeB()) / 255 };
+        if (ImGui::ColorEdit3("Shape Color", imguiColor))
+            {
+            currentShape.setShapeR(static_cast<int>(imguiColor[0] * 255));
+            currentShape.setShapeG(static_cast<int>(imguiColor[1] * 255));
+            currentShape.setShapeB(static_cast<int>(imguiColor[2] * 255));
+            currentShape.setShapeColor();
+        }
 
         // Press button to set text string
         //if (ImGui::Button("Set Text"))
