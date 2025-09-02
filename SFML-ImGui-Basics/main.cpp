@@ -213,7 +213,6 @@ int main()
 
         // ImGui Ui
         ImGui::SameLine();
-        if (ImGui::Button("Reset Circle"))
         ImGui::Begin("Shape Properties");
 
         Shape& currentShape = shapes[item_current];
