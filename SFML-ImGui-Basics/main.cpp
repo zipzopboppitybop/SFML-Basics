@@ -88,10 +88,7 @@ int main()
         ImGui::InputText("Text", displayString, 255);
 
         // Press button to set text string
-        if (ImGui::Button("Set Text"))
-        {
-            text.setString(displayString);
-        }
+
         ImGui::SameLine();
         if (ImGui::Button("Reset Circle"))
         {
